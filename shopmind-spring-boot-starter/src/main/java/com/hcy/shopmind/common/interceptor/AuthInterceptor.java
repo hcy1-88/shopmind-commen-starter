@@ -1,6 +1,7 @@
 package com.hcy.shopmind.common.interceptor;
 
 import cn.hutool.core.util.StrUtil;
+import com.hcy.shopmind.common.annotation.RequireAuth;
 import com.hcy.shopmind.common.constant.CommonConstants;
 import com.hcy.shopmind.common.context.UserContext;
 import com.hcy.shopmind.common.properties.AuthProperties;
@@ -11,11 +12,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.lang.reflect.Method;
+
 /**
- * 认证拦截器
- * 负责 Token 校验和用户信息注入
+ * 认证拦截器（注解驱动）
+ * <p>
+ * 设计理念：
+ * 1. 默认所有接口都是公开的（适合电商等 C 端项目）
+ * 2. 只有标记了 @RequireAuth 的接口才需要认证
+ * 3. 系统接口（如 /actuator/**）通过配置白名单自动放行
+ * </p>
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -28,12 +37,39 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String requestUri = request.getRequestURI();
 
-        // 检查是否在白名单中
-        if (isInWhitelist(requestUri)) {
+        // 1. 检查系统白名单（如 /actuator/**、/swagger-ui/** 等）
+        if (isInSystemWhitelist(requestUri)) {
             if (authProperties.isLogEnabled()) {
-                log.debug("请求路径在白名单中，跳过认证: {}", requestUri);
+                log.debug("系统白名单路径，跳过认证: {}", requestUri);
             }
             return true;
+        }
+
+        // 2. 检查是否为 HandlerMethod（Controller 方法）
+        if (!(handler instanceof HandlerMethod)) {
+            // 不是 Controller 方法（如静态资源），直接放行
+            return true;
+        }
+
+        HandlerMethod handlerMethod = (HandlerMethod) handler;
+        Method method = handlerMethod.getMethod();
+        Class<?> clazz = handlerMethod.getBeanType();
+
+        // 3. 检查方法或类上是否有 @RequireAuth 注解
+        boolean requireAuth = method.isAnnotationPresent(RequireAuth.class)
+                || clazz.isAnnotationPresent(RequireAuth.class);
+
+        // 4. 如果不需要认证，直接放行
+        if (!requireAuth) {
+            if (authProperties.isLogEnabled()) {
+                log.debug("公开接口，无需认证: {}", requestUri);
+            }
+            return true;
+        }
+
+        // 5. 需要认证，开始验证 Token
+        if (authProperties.isLogEnabled()) {
+            log.debug("需要认证的接口，开始验证 Token: {}", requestUri);
         }
 
         // 获取 Token
@@ -87,10 +123,11 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     /**
-     * 检查请求路径是否在白名单中
+     * 检查请求路径是否在系统白名单中
+     * 系统白名单用于放行系统级别的接口（如健康检查、监控、文档等）
      */
-    private boolean isInWhitelist(String requestUri) {
-        for (String pattern : authProperties.getWhitelist()) {
+    private boolean isInSystemWhitelist(String requestUri) {
+        for (String pattern : authProperties.getSystemWhitelist()) {
             if (pathMatcher.match(pattern, requestUri)) {
                 return true;
             }

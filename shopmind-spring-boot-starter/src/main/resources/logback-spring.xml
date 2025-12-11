@@ -65,7 +65,7 @@
         <appender-ref ref="FILE_ERROR"/>
     </appender>
 
-    <!-- 开发环境：只输出到控制台 -->
+    <!-- 开发环境：只输出到控制台. 可通过 spring.profiles.active=dev/test/prod 激活不同的配置 -->
     <springProfile name="dev">
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>

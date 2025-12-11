@@ -4,49 +4,40 @@
 spring:
   application:
     name: your-service-name  # 应用名称，用于日志文件命名
+  data:
+    redis:
+          host: localhost
+          port: 6379
+          password: your-redis-password
+          database: 0
+  cloud:
+    stream:
+          rocketmq:
+            binder:
+              name-server: 127.0.0.1:9876
 
 # Shopmind 认证配置
 shopmind:
   auth:
-    enabled: true  # 是否启用认证，默认 true
+    enabled: true  # 是否启用认证拦截器，默认 true
     jwt-secret: your-jwt-secret-key-here  # JWT 密钥（生产环境务必修改）
     log-enabled: true  # 是否打印认证日志，默认 true
-    whitelist:  # 白名单路径（不需要登录的接口）
+
+    # 系统白名单（一般无需修改）
+    # 业务接口默认公开，使用 @RequireAuth 注解标记需要认证的接口
+    system-whitelist:
       - /error
       - /actuator/**
       - /v3/api-docs/**
       - /swagger-ui/**
-      - /health
-      - /info
-      # 添加你自己的白名单路径
-      - /api/auth/login
-      - /api/auth/register
-      - /api/public/**
+      - /favicon.ico
 
   # 日志配置
   log:
     path: ./logs  # 日志文件路径，默认 ./logs
 
-  # Redis 配置（可选，仅在需要时启用）
-  redis:
-    enabled: false  # 是否启用 Redis，默认 false
-
-  # Seata 配置（可选，仅在需要时启用）
-  seata:
-    enabled: false  # 是否启用 Seata，默认 false
-
-  # RocketMQ 配置（可选，仅在需要时启用）
-  rocketmq:
-    enabled: false  # 是否启用 RocketMQ，默认 false
 
 # 如果启用了 Redis，需要配置 Redisson
-spring:
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      password: your-redis-password
-      database: 0
 
 # 如果启用了 Seata，需要配置 Seata
 seata:
@@ -64,9 +55,3 @@ seata:
       group: SEATA_GROUP
 
 # 如果启用了 RocketMQ，需要配置 RocketMQ
-spring:
-  cloud:
-    stream:
-      rocketmq:
-        binder:
-          name-server: 127.0.0.1:9876

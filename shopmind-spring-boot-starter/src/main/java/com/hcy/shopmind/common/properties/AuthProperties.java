@@ -8,15 +8,20 @@ import java.util.List;
 
 /**
  * 认证配置属性
+ * <p>
+ * 设计说明：
+ * 1. 默认所有接口都是公开的，业务接口通过 @RequireAuth 注解标记需要认证
+ * 2. systemWhitelist 仅用于系统级接口（如监控、文档），一般不需要修改
+ * </p>
  */
 @Data
 @ConfigurationProperties(prefix = "shopmind.auth")
 public class AuthProperties {
 
     /**
-     * 是否启用认证
+     * 是否启用认证拦截器
      */
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     /**
      * JWT 密钥
@@ -24,19 +29,17 @@ public class AuthProperties {
     private String jwtSecret = "shopmind-default-secret-key-please-change-it-in-production";
 
     /**
-     * 白名单路径（不需要登录的接口）
-     * 默认包含常见的健康检查、文档、静态资源等路径
+     * 系统白名单路径（用于系统级接口，一般无需修改）
+     * 包含：健康检查、监控端点、API 文档、静态资源等
      */
-    private List<String> whitelist = new ArrayList<>(List.of(
+    private List<String> systemWhitelist = new ArrayList<>(List.of(
             "/error",
             "/actuator/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/webjars/**",
-            "/favicon.ico",
-            "/health",
-            "/info"
+            "/favicon.ico"
     ));
 
     /**
