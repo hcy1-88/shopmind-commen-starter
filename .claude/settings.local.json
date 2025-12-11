@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /s /b E:idea_workspaceshopmind-common-startershopmind-spring-boot-startersrc*.java)",
+      "Bash(tree:*)"
+    ]
+  }
+}
