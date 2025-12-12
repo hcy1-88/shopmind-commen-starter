@@ -1,9 +1,9 @@
-package com.hcy.shopmind.common.interceptor;
+package com.shopmind.interceptor;
 
 import cn.hutool.core.util.StrUtil;
-import com.hcy.shopmind.common.constant.CommonConstants;
-import com.hcy.shopmind.common.context.UserContext;
-import com.hcy.shopmind.common.util.TraceIdUtils;
+import com.shopmind.constant.CommonConstants;
+import com.shopmind.context.UserContext;
+import com.shopmind.util.TraceIdUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

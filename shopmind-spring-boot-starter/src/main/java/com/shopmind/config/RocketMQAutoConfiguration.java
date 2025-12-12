@@ -1,4 +1,4 @@
-package com.hcy.shopmind.common.config;
+package com.shopmind.config;
 
 import com.alibaba.cloud.stream.binder.rocketmq.RocketMQMessageChannelBinder;
 import lombok.extern.slf4j.Slf4j;

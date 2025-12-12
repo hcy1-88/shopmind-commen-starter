@@ -1,11 +1,12 @@
-package com.hcy.shopmind.common.interceptor;
+package com.shopmind.interceptor;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.hcy.shopmind.common.annotation.RequireAuth;
-import com.hcy.shopmind.common.constant.CommonConstants;
-import com.hcy.shopmind.common.context.UserContext;
-import com.hcy.shopmind.common.properties.AuthProperties;
-import com.hcy.shopmind.common.util.JwtUtils;
+import com.shopmind.annotation.RequireAuth;
+import com.shopmind.constant.CommonConstants;
+import com.shopmind.context.UserContext;
+import com.shopmind.properties.AuthProperties;
+import com.shopmind.util.JwtUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 认证拦截器（注解驱动）
@@ -127,7 +129,11 @@ public class AuthInterceptor implements HandlerInterceptor {
      * 系统白名单用于放行系统级别的接口（如健康检查、监控、文档等）
      */
     private boolean isInSystemWhitelist(String requestUri) {
-        for (String pattern : authProperties.getSystemWhitelist()) {
+        List<String> whihteList = authProperties.getSystemWhitelist();
+        if (CollectionUtil.isEmpty(whihteList)){
+            return false;
+        }
+        for (String pattern : whihteList) {
             if (pathMatcher.match(pattern, requestUri)) {
                 return true;
             }

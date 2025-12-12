@@ -1,4 +1,4 @@
-package com.hcy.shopmind.common.properties;
+package com.shopmind.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

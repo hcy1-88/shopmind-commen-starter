@@ -4,17 +4,6 @@
 spring:
   application:
     name: your-service-name  # 应用名称，用于日志文件命名
-  data:
-    redis:
-          host: localhost
-          port: 6379
-          password: your-redis-password
-          database: 0
-  cloud:
-    stream:
-          rocketmq:
-            binder:
-              name-server: 127.0.0.1:9876
 
 # Shopmind 认证配置
 shopmind:
@@ -37,21 +26,3 @@ shopmind:
     path: ./logs  # 日志文件路径，默认 ./logs
 
 
-# 如果启用了 Redis，需要配置 Redisson
-
-# 如果启用了 Seata，需要配置 Seata
-seata:
-  enabled: true
-  application-id: ${spring.application.name}
-  tx-service-group: ${spring.application.name}-group
-  service:
-    vgroup-mapping:
-      ${spring.application.name}-group: default
-  registry:
-    type: nacos
-    nacos:
-      server-addr: 127.0.0.1:8848
-      namespace: ""
-      group: SEATA_GROUP
-
-# 如果启用了 RocketMQ，需要配置 RocketMQ

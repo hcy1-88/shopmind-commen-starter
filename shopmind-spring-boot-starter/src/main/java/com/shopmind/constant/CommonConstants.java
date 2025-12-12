@@ -1,4 +1,4 @@
-package com.hcy.shopmind.common.constant;
+package com.shopmind.constant;
 
 /**
  * 通用常量

@@ -1,5 +1,7 @@
-com.hcy.shopmind.common.autoconfigure.ShopmindAutoConfiguration
-com.hcy.shopmind.common.config.WebConfig
-com.hcy.shopmind.common.config.RedisAutoConfiguration
-com.hcy.shopmind.common.config.SeataAutoConfiguration
-com.hcy.shopmind.common.config.RocketMQAutoConfiguration
+com.shopmind.autoconfigure.ShopmindAutoConfiguration
+com.shopmind.config.WebConfig
+com.shopmind.config.FeignAutoConfiguration
+com.shopmind.config.RedisAutoConfiguration
+com.shopmind.config.SeataAutoConfiguration
+com.shopmind.config.RocketMQAutoConfiguration
+com.shopmind.config.LogAutoConfiguration

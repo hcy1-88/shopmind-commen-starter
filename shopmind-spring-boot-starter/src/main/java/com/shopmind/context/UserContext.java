@@ -1,4 +1,4 @@
-package com.hcy.shopmind.common.context;
+package com.shopmind.context;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

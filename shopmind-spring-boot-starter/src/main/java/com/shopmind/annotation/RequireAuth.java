@@ -1,4 +1,4 @@
-package com.hcy.shopmind.common.annotation;
+package com.shopmind.annotation;
 
 import java.lang.annotation.*;
 

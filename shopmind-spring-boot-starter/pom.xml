@@ -44,6 +44,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- OpenFeign（服务调用） -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Spring Cloud Alibaba Seata（分布式事务） -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

@@ -1,10 +1,9 @@
-package com.hcy.shopmind.common.config;
+package com.shopmind.config;
 
-import com.hcy.shopmind.common.interceptor.AuthInterceptor;
-import com.hcy.shopmind.common.interceptor.TraceIdInterceptor;
-import com.hcy.shopmind.common.properties.AuthProperties;
+import com.shopmind.interceptor.AuthInterceptor;
+import com.shopmind.interceptor.TraceIdInterceptor;
+import com.shopmind.properties.AuthProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

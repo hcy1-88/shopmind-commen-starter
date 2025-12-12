@@ -13,10 +13,12 @@ Shopmind AI 电商微服务项目的基础框架，基于 Spring Cloud Alibaba 2
 
 ### 1. Token 认证与鉴权
 
+- 可通过配置开关完全禁用认证，默认启用认证（如果你的业务存在需认证的接口，建议开启）
+- 支持白名单配置（不需要认证的接口，通常配一些系统接口）
+- 只认证被 @RequireAuth 注解的类或url接口
 - 基于 JWT 的 Token 校验
-- 支持白名单配置（不需要登录的接口）
 - 自动解析 Token 并注入用户上下文
-- 可通过配置开关完全禁用认证
+
 
 ### 2. UserContext 用户上下文
 
@@ -42,15 +44,8 @@ String traceId = UserContext.traceId();
 - 自动注入到日志 MDC 中，方便日志追踪
 - 自动添加到响应头，方便前端追踪
 
-### 4. 中间件可选引入
 
-通过配置开关控制中间件的启用，避免未配置时启动报错：
-
-- **Redis/Redisson**：通过 `shopmind.redis.enabled` 控制
-- **Seata**：通过 `shopmind.seata.enabled` 控制
-- **RocketMQ**：通过 `shopmind.rocketmq.enabled` 控制
-
-### 5. 日志系统
+### 4. 日志系统
 
 - 基于 Logback 实现
 - 支持控制台和文件双输出
@@ -58,7 +53,7 @@ String traceId = UserContext.traceId();
 - 自动包含 Trace ID，方便链路追踪
 - 单独的错误日志文件
 - 异步输出，提高性能
-- 支持不同环境的日志配置（dev/test/prod）
+- 支持不同环境的日志配置（spring.profiles.active=dev/test/prod）
 
 ## 快速开始
 
@@ -188,27 +183,6 @@ public class UserService {
 4. **日志路径**：确保应用有权限写入日志路径
 5. **Trace ID 传递**：Gateway 应该在请求头中添加 `X-Trace-ID`，如果没有则由各服务自动生成
 
-## 项目结构
-
-```
-shopmind-common-starter
-├── pom.xml                                    # 父 POM
-└── shopmind-spring-boot-starter
-    ├── pom.xml                                # Starter POM
-    └── src/main
-        ├── java/com/hcy/shopmind/common
-        │   ├── autoconfigure                  # 自动配置
-        │   ├── config                         # 配置类
-        │   ├── constant                       # 常量定义
-        │   ├── context                        # 上下文
-        │   ├── interceptor                    # 拦截器
-        │   ├── properties                     # 配置属性
-        │   └── util                           # 工具类
-        └── resources
-            ├── META-INF/spring                # Spring Boot 自动配置
-            ├── logback-spring.xml             # Logback 配置
-            └── application-example.yml        # 配置示例
-```
 
 ## 开发指南
 
@@ -236,79 +210,13 @@ shopmind:
     enabled: false
 ```
 
-### 启用中间件
-
-#### 启用 Redis
-
-```yaml
-shopmind:
-  redis:
-    enabled: true
-
-spring:
-  data:
-    redis:
-      host: localhost
-      port: 6379
-```
-
-#### 启用 Seata
-
-```yaml
-shopmind:
-  seata:
-    enabled: true
-
-seata:
-  application-id: ${spring.application.name}
-  tx-service-group: ${spring.application.name}-group
-```
-
-#### 启用 RocketMQ
-
-```yaml
-shopmind:
-  rocketmq:
-    enabled: true
-
-spring:
-  cloud:
-    stream:
-      rocketmq:
-        binder:
-          name-server: 127.0.0.1:9876
-```
-
-## 常见问题
-
-### 1. 启动时提示找不到 JWT 密钥？
-
-请在配置文件中添加：
-```yaml
-shopmind:
-  auth:
-    jwt-secret: your-jwt-secret-key
-```
-
-### 2. Redis/Seata/RocketMQ 未配置时启动报错？
-
-请确保相关中间件的开关设置为 `false`：
-```yaml
-shopmind:
-  redis:
-    enabled: false
-  seata:
-    enabled: false
-  rocketmq:
-    enabled: false
-```
 
 ### 3. 日志文件没有生成？
 
 检查：
 1. 日志路径是否有写入权限
 2. 应用是否配置了 `spring.application.name`
-3. 是否配置了环境（如 `spring.profiles.active`）
+3. 是否配置了环境（如 `spring.profiles.active`, dev 输出控制台，test 和 prod 输出到磁盘文件）
 
 ### 4. Trace ID 没有打印？
 

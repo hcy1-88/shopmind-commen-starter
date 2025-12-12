@@ -1,8 +1,7 @@
-package com.hcy.shopmind.common.config;
+package com.shopmind.config;
 
-import com.hcy.shopmind.common.properties.LogProperties;
+import com.shopmind.properties.LogProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 

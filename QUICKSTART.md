@@ -24,11 +24,9 @@ spring:
     name: your-service-name
 
 shopmind:
+  enabled: true
   auth:
     jwt-secret: your-jwt-secret-key-min-32-chars
-    whitelist:
-      - /api/auth/**
-      - /api/public/**
 ```
 
 就这么简单！启动你的应用即可。
@@ -38,7 +36,7 @@ shopmind:
 在你的 Controller 或 Service 中：
 
 ```java
-import com.hcy.shopmind.common.context.UserContext;
+import context.com.shopmind.UserContext;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

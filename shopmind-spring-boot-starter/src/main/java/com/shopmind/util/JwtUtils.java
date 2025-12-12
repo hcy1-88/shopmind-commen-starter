@@ -1,7 +1,7 @@
-package com.hcy.shopmind.common.util;
+package com.shopmind.util;
 
 import cn.hutool.core.util.StrUtil;
-import com.hcy.shopmind.common.constant.CommonConstants;
+import com.shopmind.constant.CommonConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

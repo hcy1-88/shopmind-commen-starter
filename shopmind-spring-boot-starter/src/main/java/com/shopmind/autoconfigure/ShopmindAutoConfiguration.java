@@ -1,4 +1,4 @@
-package com.hcy.shopmind.common.autoconfigure;
+package com.shopmind.autoconfigure;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
  */
 @Slf4j
 @AutoConfiguration
-@ComponentScan(basePackages = "com.hcy.shopmind.common")
+@ComponentScan(basePackages = "com.shopmind")
 public class ShopmindAutoConfiguration {
 
     @PostConstruct

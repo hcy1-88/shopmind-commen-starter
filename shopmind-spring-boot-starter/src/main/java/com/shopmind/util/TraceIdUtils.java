@@ -1,4 +1,4 @@
-package com.hcy.shopmind.common.util;
+package com.shopmind.util;
 
 import cn.hutool.core.util.IdUtil;
 
