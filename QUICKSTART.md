@@ -23,10 +23,6 @@ spring:
   application:
     name: your-service-name
 
-shopmind:
-  enabled: true
-  auth:
-    jwt-secret: your-jwt-secret-key-min-32-chars
 ```
 
 就这么简单！启动你的应用即可。
@@ -61,63 +57,6 @@ public class UserController {
 }
 ```
 
-## 4. 测试
-
-### 4.1 测试白名单接口（无需 Token）
-
-```bash
-curl http://localhost:8080/api/public/test
-```
-
-### 4.2 测试需要认证的接口（需要 Token）
-
-```bash
-curl -H "Authorization: Bearer your-jwt-token" \
-     http://localhost:8080/api/user/profile
-```
-
-## 5. 查看日志
-
-日志文件位置：`./logs/your-service-name.log`
-
-日志格式示例：
-```
-2024-12-11 19:00:00.123 [http-nio-8080-exec-1] [abc123def456] INFO  c.h.s.UserController - 用户查询个人信息, userId=12345
-```
-
-其中 `[abc123def456]` 就是 TraceId，可以用来追踪整个请求链路。
-
-## 6. 启用中间件（可选）
-
-### 启用 Redis
-
-```yaml
-shopmind:
-  redis:
-    enabled: true
-
-spring:
-  data:
-    redis:
-      host: localhost
-      port: 6379
-```
-
-### 启用 Seata
-
-```yaml
-shopmind:
-  seata:
-    enabled: true
-```
-
-### 启用 RocketMQ
-
-```yaml
-shopmind:
-  rocketmq:
-    enabled: true
-```
 
 ## 7. 环境配置
 

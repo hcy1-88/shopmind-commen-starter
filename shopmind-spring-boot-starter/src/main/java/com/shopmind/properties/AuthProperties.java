@@ -24,11 +24,6 @@ public class AuthProperties {
     private boolean enabled = false;
 
     /**
-     * JWT 密钥
-     */
-    private String jwtSecret = "shopmind-default-secret-key-please-change-it-in-production";
-
-    /**
      * 系统白名单路径（用于系统级接口，一般无需修改）
      * 包含：健康检查、监控端点、API 文档、静态资源等
      */

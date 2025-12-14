@@ -55,6 +55,12 @@ String traceId = UserContext.traceId();
 - 异步输出，提高性能
 - 支持不同环境的日志配置（spring.profiles.active=dev/test/prod）
 
+
+### 5. 统一异常处理
+
+- ResultContext 作为后端向前端的 API 响应类型
+- 业务异常统一捕获，转换为 ResultContext
+
 ## 快速开始
 
 ### 1. 引入依赖
@@ -139,13 +145,6 @@ public class UserService {
 |-------|------|-------|------|
 | `shopmind.log.path` | 日志文件存储路径 | `./logs` | 否 |
 
-### 中间件配置
-
-| 配置项 | 说明 | 默认值 | 必填 |
-|-------|------|-------|------|
-| `shopmind.redis.enabled` | 是否启用 Redis | `false` | 否 |
-| `shopmind.seata.enabled` | 是否启用 Seata | `false` | 否 |
-| `shopmind.rocketmq.enabled` | 是否启用 RocketMQ | `false` | 否 |
 
 ## 日志格式
 
@@ -186,7 +185,7 @@ public class UserService {
 
 ## 开发指南
 
-### 扩展白名单
+### 1.扩展白名单
 
 在业务项目的配置文件中添加：
 
@@ -200,7 +199,7 @@ shopmind:
       - /your/custom/path/**
 ```
 
-### 禁用认证
+### 2. 禁用认证
 
 如果某个服务不需要认证（如 Gateway），可以禁用：
 
@@ -224,4 +223,4 @@ shopmind:
 
 ## 许可证
 
-Copyright © 2024 Shopmind
+Copyright © 2025 Shopmind

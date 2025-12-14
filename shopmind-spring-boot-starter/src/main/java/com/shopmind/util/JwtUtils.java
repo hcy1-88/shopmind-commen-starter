@@ -4,11 +4,9 @@ import cn.hutool.core.util.StrUtil;
 import com.shopmind.constant.CommonConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
+import java.security.PublicKey;
 import java.util.Date;
 
 /**
@@ -18,11 +16,11 @@ import java.util.Date;
 public class JwtUtils {
 
     /**
-     * 解析 Token
+     * 解析 Token（使用公钥）
      */
-    public static Claims parseToken(String token, String secret) {
+    public static Claims parseToken(String token, PublicKey publicKey) {
         try {
-            if (StrUtil.isBlank(token) || StrUtil.isBlank(secret)) {
+            if (StrUtil.isBlank(token) || publicKey == null) {
                 return null;
             }
 
@@ -31,10 +29,8 @@ public class JwtUtils {
                 token = token.substring(CommonConstants.TOKEN_PREFIX.length());
             }
 
-            SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-
             return Jwts.parser()
-                    .verifyWith(key)
+                    .verifyWith(publicKey)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();

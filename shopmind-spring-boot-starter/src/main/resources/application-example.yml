@@ -9,9 +9,7 @@ spring:
 shopmind:
   auth:
     enabled: true  # 是否启用认证拦截器，默认 true
-    jwt-secret: your-jwt-secret-key-here  # JWT 密钥（生产环境务必修改）
     log-enabled: true  # 是否打印认证日志，默认 true
-
     # 系统白名单（一般无需修改）
     # 业务接口默认公开，使用 @RequireAuth 注解标记需要认证的接口
     system-whitelist:

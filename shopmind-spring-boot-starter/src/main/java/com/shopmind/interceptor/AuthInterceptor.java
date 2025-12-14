@@ -6,6 +6,7 @@ import com.shopmind.annotation.RequireAuth;
 import com.shopmind.constant.CommonConstants;
 import com.shopmind.context.UserContext;
 import com.shopmind.properties.AuthProperties;
+import com.shopmind.service.PublicKeyProvider;
 import com.shopmind.util.JwtUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.lang.reflect.Method;
+import java.security.PublicKey;
 import java.util.List;
 
 /**
@@ -33,6 +35,7 @@ import java.util.List;
 public class AuthInterceptor implements HandlerInterceptor {
 
     private final AuthProperties authProperties;
+    private final PublicKeyProvider publicKeyProvider;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
@@ -82,8 +85,15 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        // 解析 Token
-        Claims claims = JwtUtils.parseToken(token, authProperties.getJwtSecret());
+        // 解析 Token（使用公钥）
+        PublicKey publicKey = publicKeyProvider.getDefaultPublicKey();
+        if (publicKey == null) {
+            log.error("无法获取公钥，请检查认证服务是否正常");
+            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            return false;
+        }
+
+        Claims claims = JwtUtils.parseToken(token, publicKey);
         if (claims == null) {
             log.warn("Token 解析失败: {}", requestUri);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -129,11 +139,11 @@ public class AuthInterceptor implements HandlerInterceptor {
      * 系统白名单用于放行系统级别的接口（如健康检查、监控、文档等）
      */
     private boolean isInSystemWhitelist(String requestUri) {
-        List<String> whihteList = authProperties.getSystemWhitelist();
-        if (CollectionUtil.isEmpty(whihteList)){
+        List<String> whiteList = authProperties.getSystemWhitelist();
+        if (CollectionUtil.isEmpty(whiteList)){
             return false;
         }
-        for (String pattern : whihteList) {
+        for (String pattern : whiteList) {
             if (pathMatcher.match(pattern, requestUri)) {
                 return true;
             }
