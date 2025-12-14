@@ -86,7 +86,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         // 解析 Token（使用公钥）
-        PublicKey publicKey = publicKeyProvider.getDefaultPublicKey();
+        PublicKey publicKey = publicKeyProvider.getPublicKey();
         if (publicKey == null) {
             log.error("无法获取公钥，请检查认证服务是否正常");
             response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
@@ -111,7 +111,6 @@ public class AuthInterceptor implements HandlerInterceptor {
         Long userId = JwtUtils.getClaimAsLong(claims, CommonConstants.JWT_USER_ID);
         String username = JwtUtils.getClaimAsString(claims, CommonConstants.JWT_USERNAME);
         String phone = JwtUtils.getClaimAsString(claims, CommonConstants.JWT_PHONE);
-        String email = JwtUtils.getClaimAsString(claims, CommonConstants.JWT_EMAIL);
         Integer userType = JwtUtils.getClaimAsInteger(claims, CommonConstants.JWT_USER_TYPE);
 
         // 获取或创建 UserContext（可能已经由 TraceIdInterceptor 创建）

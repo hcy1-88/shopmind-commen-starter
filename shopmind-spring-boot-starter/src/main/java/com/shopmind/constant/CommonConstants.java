@@ -44,4 +44,9 @@ public interface CommonConstants {
      * JWT 中的用户类型
      */
     String JWT_USER_TYPE = "userType";
+
+    /**
+     * 加解密算法
+     */
+    String RSA =  "RSA";
 }

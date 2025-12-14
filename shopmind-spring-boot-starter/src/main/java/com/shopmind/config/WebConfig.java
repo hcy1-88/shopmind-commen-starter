@@ -5,9 +5,14 @@ import com.shopmind.interceptor.TraceIdInterceptor;
 import com.shopmind.properties.AuthProperties;
 import com.shopmind.service.PublicKeyProvider;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -21,9 +26,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @EnableConfigurationProperties(AuthProperties.class)
 @RequiredArgsConstructor
-public class WebConfig implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 
     private final AuthProperties authProperties;
+    private ApplicationContext applicationContext;
 
     /**
      * 提供 RestTemplate Bean
@@ -38,9 +44,17 @@ public class WebConfig implements WebMvcConfigurer {
      * 提供 PublicKeyProvider Bean
      */
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnProperty(name = "shopmind.auth.enabled", havingValue = "true")
     public PublicKeyProvider publicKeyProvider(RestTemplate restTemplate) {
         return new PublicKeyProvider(restTemplate);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "shopmind.auth.enabled", havingValue = "true")
+    public AuthInterceptor authInterceptor(
+            AuthProperties authProperties,
+            PublicKeyProvider publicKeyProvider) {
+        return new AuthInterceptor(authProperties, publicKeyProvider);
     }
 
     @Override
@@ -52,9 +66,14 @@ public class WebConfig implements WebMvcConfigurer {
 
         // 认证拦截器（仅在启用认证时注册）
         if (authProperties.isEnabled()) {
-            registry.addInterceptor(new AuthInterceptor(authProperties, publicKeyProvider(restTemplate())))
+            registry.addInterceptor(applicationContext.getBean(AuthInterceptor.class))
                     .addPathPatterns("/**")
                     .order(2);
         }
+    }
+
+    @Override
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

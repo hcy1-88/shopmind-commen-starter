@@ -6,14 +6,41 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 
+import java.security.KeyFactory;
+import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import java.util.Date;
 
 /**
  * JWT 工具类
+ * 注意：此工具类只提供 Token 验证功能，不提供生成功能
+ * Token 生成应该只在 auth-service 中进行，保证安全性
  */
 @Slf4j
 public class JwtUtils {
+
+    /**
+     * 工具：从 Base64 字符串加载 PublicKey
+     */
+    public static PublicKey loadPublicKeyFromBase64(String base64) throws Exception {
+        byte[] keyBytes = Base64.getDecoder().decode(base64);
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        return kf.generatePublic(spec);
+    }
+
+    /**
+     * 工具：从 Base64 字符串加载 PrivateKey
+     */
+    public static PrivateKey loadPrivateKeyFromBase64(String base64) throws Exception {
+        byte[] keyBytes = Base64.getDecoder().decode(base64);
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        return kf.generatePrivate(spec);
+    }
 
     /**
      * 解析 Token（使用公钥）
