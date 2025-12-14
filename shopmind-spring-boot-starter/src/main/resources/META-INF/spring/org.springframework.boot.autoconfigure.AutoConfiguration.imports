@@ -4,4 +4,3 @@ com.shopmind.config.FeignAutoConfiguration
 com.shopmind.config.RedisAutoConfiguration
 com.shopmind.config.SeataAutoConfiguration
 com.shopmind.config.RocketMQAutoConfiguration
-com.shopmind.config.LogAutoConfiguration
