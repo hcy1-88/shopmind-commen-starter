@@ -1,8 +1,8 @@
-com.shopmind.autoconfigure.ShopmindAutoConfiguration
-com.shopmind.config.WebConfig
-com.shopmind.config.FeignAutoConfiguration
-com.shopmind.config.RedisAutoConfiguration
-com.shopmind.config.SeataAutoConfiguration
-com.shopmind.config.RocketMQAutoConfiguration
-com.shopmind.config.ExceptionHandlerAutoConfiguration
-com.shopmind.listeners.ApplicationStartupLogger
+com.shopmind.framework.autoconfigure.ShopmindAutoConfiguration
+com.shopmind.framework.config.WebConfig
+com.shopmind.framework.config.FeignAutoConfiguration
+com.shopmind.framework.config.RedisAutoConfiguration
+com.shopmind.framework.config.SeataAutoConfiguration
+com.shopmind.framework.config.RocketMQAutoConfiguration
+com.shopmind.framework.config.ExceptionHandlerAutoConfiguration
+com.shopmind.framework.listeners.ApplicationStartupLogger

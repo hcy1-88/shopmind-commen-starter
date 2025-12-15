@@ -1,5 +1,7 @@
 package com.shopmind.id;
 
+import com.shopmind.framework.id.IdGenerator;
+import com.shopmind.framework.id.SnowflakeIdGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
