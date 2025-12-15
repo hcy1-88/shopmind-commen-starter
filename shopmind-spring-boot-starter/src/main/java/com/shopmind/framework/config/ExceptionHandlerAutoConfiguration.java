@@ -27,7 +27,7 @@ import jakarta.annotation.PostConstruct;
         matchIfMissing = true
 )
 @EnableConfigurationProperties(ExceptionHandlerProperties.class)
-@ComponentScan(basePackages = "com.shopmind.exception")
+@ComponentScan(basePackages = "com.shopmind.framework.exception")
 public class ExceptionHandlerAutoConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(ExceptionHandlerAutoConfiguration.class);
