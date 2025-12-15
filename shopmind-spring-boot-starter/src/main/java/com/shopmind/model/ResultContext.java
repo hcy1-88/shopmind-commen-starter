@@ -2,6 +2,9 @@ package com.shopmind.model;
 
 import com.shopmind.constant.CommonConstants;
 import com.shopmind.util.TraceIdUtils;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -14,6 +17,7 @@ import java.util.Map;
  *
  * @param <T> 返回数据类型
  */
+@Data
 public class ResultContext<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -220,65 +224,4 @@ public class ResultContext<T> implements Serializable {
         return TraceIdUtils.generateTraceId();
     }
 
-    // ==================== Getters and Setters ====================
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getTraceId() {
-        return traceId;
-    }
-
-    public void setTraceId(String traceId) {
-        this.traceId = traceId;
-    }
-
-    public Map<String, Object> getExtra() {
-        return extra;
-    }
-
-    public void setExtra(Map<String, Object> extra) {
-        this.extra = extra;
-    }
-
-    @Override
-    public String toString() {
-        return "ResultContext{" +
-                "data=" + data +
-                ", success=" + success +
-                ", code='" + code + '\'' +
-                ", message='" + message + '\'' +
-                ", traceId='" + traceId + '\'' +
-                ", extra=" + extra +
-                '}';
-    }
 }
