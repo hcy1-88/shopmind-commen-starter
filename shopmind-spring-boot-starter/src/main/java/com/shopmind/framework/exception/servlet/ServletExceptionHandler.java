@@ -3,14 +3,17 @@ package com.shopmind.framework.exception.servlet;
 import com.shopmind.framework.context.ResultContext;
 import com.shopmind.framework.constant.CommonConstants;
 import com.shopmind.framework.exception.ShopmindException;
+import com.shopmind.framework.util.TraceIdUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.regex.Matcher;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
  * <p>
  * 可通过配置 shopmind.exception-handler.enabled=false 禁用
  */
+@ConditionalOnClass(DispatcherServlet.class)
 @RestControllerAdvice
 public class ServletExceptionHandler {
 
@@ -43,7 +47,7 @@ public class ServletExceptionHandler {
                 e.getCode(),
                 e.getMessage(),
                 e.getContext(),
-                getCurrentTraceId(),
+                TraceIdUtils.getCurrentTraceId(),
                 e);
 
         return ResultContext.<Void>failBuilder()
@@ -55,7 +59,7 @@ public class ServletExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.OK)
     public ResultContext<Void> handleNoResourceFoundException(NoResourceFoundException e) {
-        log.warn("资源路径不存在：message={}, traceId:{}", e.getMessage(), getCurrentTraceId());
+        log.warn("资源路径不存在：message={}, traceId:{}", e.getMessage(), TraceIdUtils.getCurrentTraceId());
         // 正确的正则：注意只有两个反斜杠
         Pattern pattern = Pattern.compile("No static resource ([^.]+)\\.");
         Matcher matcher = pattern.matcher(e.getMessage());
@@ -83,7 +87,7 @@ public class ServletExceptionHandler {
 
         log.warn("参数校验异常: message={}, traceId={}",
                 errorMessage,
-                getCurrentTraceId(),
+                TraceIdUtils.getCurrentTraceId(),
                 e);
 
         return ResultContext.<Void>failBuilder()
@@ -103,7 +107,7 @@ public class ServletExceptionHandler {
     public ResultContext<Void> handleIllegalArgumentException(IllegalArgumentException e) {
         log.warn("非法参数异常: message={}, traceId={}",
                 e.getMessage(),
-                getCurrentTraceId(),
+                TraceIdUtils.getCurrentTraceId(),
                 e);
 
         return ResultContext.<Void>failBuilder()
@@ -122,7 +126,7 @@ public class ServletExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResultContext<Void> handleNullPointerException(NullPointerException e) {
         log.error("空指针异常: traceId={}",
-                getCurrentTraceId(),
+                TraceIdUtils.getCurrentTraceId(),
                 e);
 
         return ResultContext.<Void>failBuilder()
@@ -145,7 +149,7 @@ public class ServletExceptionHandler {
         log.error("系统异常: exceptionType={}, message={}, traceId={}",
                 e.getClass().getName(),
                 e.getMessage(),
-                getCurrentTraceId(),
+                TraceIdUtils.getCurrentTraceId(),
                 e);
 
         return ResultContext.<Void>failBuilder()
@@ -154,14 +158,5 @@ public class ServletExceptionHandler {
                 .build();
     }
 
-    /**
-     * 获取当前请求的 TraceId
-     * 从 MDC 中获取，与日志系统保持一致
-     *
-     * @return TraceId
-     */
-    private String getCurrentTraceId() {
-        String traceId = MDC.get(CommonConstants.TRACE_ID_HEADER);
-        return traceId != null ? traceId : "unknown";
-    }
+
 }
