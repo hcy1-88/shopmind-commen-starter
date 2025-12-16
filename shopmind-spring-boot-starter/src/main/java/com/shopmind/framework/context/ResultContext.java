@@ -62,7 +62,7 @@ public class ResultContext<T> implements Serializable {
 
     public ResultContext() {
         this.extra = new HashMap<>();
-        this.traceId = getCurrentTraceId();
+        this.traceId = TraceIdUtils.getCurrentTraceId();
     }
 
     public ResultContext(boolean success, String code, String message, T data) {
@@ -196,30 +196,10 @@ public class ResultContext<T> implements Serializable {
             result.success = this.success;
             result.code = this.code;
             result.message = this.message;
-            result.traceId = this.traceId != null ? this.traceId : getCurrentTraceId();
+            result.traceId = this.traceId != null ? this.traceId : TraceIdUtils.getCurrentTraceId();
             result.extra = this.extra;
             return result;
         }
-    }
-
-    // ==================== 工具方法 ====================
-
-    /**
-     * 获取当前请求的 TraceId
-     */
-    private static String getCurrentTraceId() {
-        try {
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            if (attributes != null) {
-                String traceId = attributes.getRequest().getHeader(CommonConstants.TRACE_ID_HEADER);
-                if (traceId != null && !traceId.isEmpty()) {
-                    return traceId;
-                }
-            }
-        } catch (Exception e) {
-            // 忽略异常，使用生成的 TraceId
-        }
-        return TraceIdUtils.generateTraceId();
     }
 
 }
