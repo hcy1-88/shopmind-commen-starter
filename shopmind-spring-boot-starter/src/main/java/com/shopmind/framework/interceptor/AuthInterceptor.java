@@ -6,7 +6,7 @@ import com.shopmind.framework.annotation.RequireAuth;
 import com.shopmind.framework.constant.CommonConstants;
 import com.shopmind.framework.context.UserContext;
 import com.shopmind.framework.properties.AuthProperties;
-import com.shopmind.framework.service.PublicKeyProvider;
+import com.shopmind.framework.provider.PublicKeyProvider;
 import com.shopmind.framework.util.JwtUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;

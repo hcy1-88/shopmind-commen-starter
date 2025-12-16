@@ -7,3 +7,4 @@ com.shopmind.framework.autoconfig.ServletExceptionHandlerAutoConfiguration
 com.shopmind.framework.autoconfig.GatewayExceptionHandlerAutoConfiguration
 com.shopmind.framework.listeners.ApplicationStartupLogger
 com.shopmind.framework.autoconfig.IdGeneratorAutoConfiguration
+com.shopmind.framework.autoconfig.StorageAutoConfiguration

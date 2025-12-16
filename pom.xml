@@ -35,6 +35,7 @@
         <jwt.version>0.12.5</jwt.version>
         <mybatis-plus.version>3.5.15</mybatis-plus.version>
         <hutool.version>5.8.25</hutool.version>
+        <amazon-awssdk.version>2.40.8</amazon-awssdk.version>
     </properties>
 
     <dependencyManagement>
@@ -94,10 +95,23 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
+
+            <!-- 优化版AWS S3 SDK -->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>s3</artifactId>
+                <version>${amazon-awssdk.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>url-connection-client</artifactId>
+                <version>${amazon-awssdk.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <!-- scope 不是 compile 的依赖不会传递，需要在这里统一声明 -->
+    <!-- scope 不是 compile 的依赖不会传递，需要在这里统一声明，子项目通过继承获取此些依赖 -->
     <dependencies>
         <!-- Lombok -->
         <dependency>

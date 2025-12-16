@@ -3,7 +3,7 @@ package com.shopmind.framework.config;
 import com.shopmind.framework.interceptor.AuthInterceptor;
 import com.shopmind.framework.interceptor.TraceIdInterceptor;
 import com.shopmind.framework.properties.AuthProperties;
-import com.shopmind.framework.service.PublicKeyProvider;
+import com.shopmind.framework.provider.PublicKeyProvider;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;

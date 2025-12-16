@@ -120,6 +120,25 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
+        <!-- 优化版AWS S3 SDK -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>url-connection-client</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 工具库 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
         <!-- 配置处理器（生成 spring-configuration-metadata.json） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
