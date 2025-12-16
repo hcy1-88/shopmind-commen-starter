@@ -4,5 +4,6 @@ com.shopmind.framework.config.FeignAutoConfiguration
 com.shopmind.framework.config.RedisAutoConfiguration
 com.shopmind.framework.config.SeataAutoConfiguration
 com.shopmind.framework.config.RocketMQAutoConfiguration
-com.shopmind.framework.config.ExceptionHandlerAutoConfiguration
+com.shopmind.framework.config.ServletExceptionHandlerAutoConfiguration
+com.shopmind.framework.config.GatewayExceptionHandlerAutoConfiguration
 com.shopmind.framework.listeners.ApplicationStartupLogger

@@ -19,7 +19,6 @@ import jakarta.annotation.PostConstruct;
  */
 @Configuration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-@ConditionalOnClass(RestControllerAdvice.class)
 @ConditionalOnProperty(
         prefix = "shopmind.exception-handler",
         name = "enabled",
@@ -27,13 +26,13 @@ import jakarta.annotation.PostConstruct;
         matchIfMissing = true
 )
 @EnableConfigurationProperties(ExceptionHandlerProperties.class)
-@ComponentScan(basePackages = "com.shopmind.framework.exception")
-public class ExceptionHandlerAutoConfiguration {
+@ComponentScan(basePackages = "com.shopmind.framework.exception.servlet")
+public class ServletExceptionHandlerAutoConfiguration {
 
-    private static final Logger log = LoggerFactory.getLogger(ExceptionHandlerAutoConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(ServletExceptionHandlerAutoConfiguration.class);
 
     @PostConstruct
     public void init() {
-        log.info("初始化全局异常处理器 GlobalExceptionHandler");
+        log.info("初始化全局异常处理器 -- FOR servlet APP");
     }
 }
