@@ -1,4 +1,4 @@
-package com.shopmind.framework.service;
+package com.shopmind.framework.provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
