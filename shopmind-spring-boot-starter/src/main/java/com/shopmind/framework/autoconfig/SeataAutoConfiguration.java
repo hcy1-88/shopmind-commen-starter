@@ -1,4 +1,4 @@
-package com.shopmind.framework.config;
+package com.shopmind.framework.autoconfig;
 
 import io.seata.spring.annotation.GlobalTransactionScanner;
 import lombok.extern.slf4j.Slf4j;

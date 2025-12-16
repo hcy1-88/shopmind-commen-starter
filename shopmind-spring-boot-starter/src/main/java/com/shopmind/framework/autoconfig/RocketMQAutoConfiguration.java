@@ -1,4 +1,4 @@
-package com.shopmind.framework.config;
+package com.shopmind.framework.autoconfig;
 
 import com.alibaba.cloud.stream.binder.rocketmq.RocketMQMessageChannelBinder;
 import lombok.extern.slf4j.Slf4j;

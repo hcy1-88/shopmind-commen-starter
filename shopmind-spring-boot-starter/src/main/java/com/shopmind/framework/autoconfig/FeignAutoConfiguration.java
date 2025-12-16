@@ -1,4 +1,4 @@
-package com.shopmind.framework.config;
+package com.shopmind.framework.autoconfig;
 
 import com.shopmind.framework.interceptor.FeignTokenInterceptor;
 import feign.RequestInterceptor;

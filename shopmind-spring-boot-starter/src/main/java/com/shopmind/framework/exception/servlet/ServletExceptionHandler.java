@@ -1,19 +1,15 @@
 package com.shopmind.framework.exception.servlet;
 
 import com.shopmind.framework.context.ResultContext;
-import com.shopmind.framework.constant.CommonConstants;
 import com.shopmind.framework.exception.ShopmindException;
 import com.shopmind.framework.util.TraceIdUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.regex.Matcher;
@@ -26,7 +22,7 @@ import java.util.stream.Collectors;
  * <p>
  * 可通过配置 shopmind.exception-handler.enabled=false 禁用
  */
-@ConditionalOnClass(DispatcherServlet.class)
+
 @RestControllerAdvice
 public class ServletExceptionHandler {
 

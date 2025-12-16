@@ -2,9 +2,6 @@ package com.shopmind.framework.exception.gateway;
 
 import com.shopmind.framework.context.ResultContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.cloud.gateway.config.GatewayAutoConfiguration;
 import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +21,8 @@ import java.util.regex.Pattern;
  * @author huangcy
  * @date 2025-12-15
  */
-@RestControllerAdvice
-@ConditionalOnClass(GatewayAutoConfiguration.class)
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @Slf4j
+@RestControllerAdvice
 public class GatewayRouteExceptionHandler {
 
     private static final Pattern NO_RESOURCE_PATTERN = Pattern.compile("\"No static resource ([^\"]+)\\.\"");

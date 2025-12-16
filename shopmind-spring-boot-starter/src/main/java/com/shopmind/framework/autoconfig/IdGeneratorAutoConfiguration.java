@@ -1,4 +1,4 @@
-package com.shopmind.framework.config;
+package com.shopmind.framework.autoconfig;
 
 import com.shopmind.framework.id.IdGenerator;
 import com.shopmind.framework.id.SnowflakeIdGenerator;
