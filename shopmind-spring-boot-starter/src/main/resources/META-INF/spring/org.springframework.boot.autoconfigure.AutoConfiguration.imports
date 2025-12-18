@@ -1,5 +1,4 @@
 com.shopmind.framework.config.WebConfig
-com.shopmind.framework.autoconfig.FeignAutoConfiguration
 com.shopmind.framework.autoconfig.RedisAutoConfiguration
 com.shopmind.framework.autoconfig.SeataAutoConfiguration
 com.shopmind.framework.autoconfig.RocketMQAutoConfiguration
@@ -8,3 +7,4 @@ com.shopmind.framework.autoconfig.GatewayExceptionHandlerAutoConfiguration
 com.shopmind.framework.listeners.ApplicationStartupLogger
 com.shopmind.framework.autoconfig.IdGeneratorAutoConfiguration
 com.shopmind.framework.autoconfig.StorageAutoConfiguration
+com.shopmind.framework.autoconfig.HttpExchangeAutoConfig
