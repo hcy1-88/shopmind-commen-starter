@@ -22,18 +22,14 @@ public class UserContext {
     /**
      * 用户名
      */
-    private String username;
+    private String nickname;
 
     /**
      * 手机号
      */
-    private String phone;
+    private String phoneNumber;
 
 
-    /**
-     * 用户类型（1:普通用户 2:商家 3:管理员）
-     */
-    private Integer userType;
 
     /**
      * TraceId
@@ -74,27 +70,19 @@ public class UserContext {
     /**
      * 获取用户名
      */
-    public static String username() {
+    public static String nickname() {
         UserContext context = get();
-        return context != null ? context.getUsername() : null;
+        return context != null ? context.getNickname() : null;
     }
 
     /**
      * 获取手机号
      */
-    public static String phone() {
+    public static String phoneNumber() {
         UserContext context = get();
-        return context != null ? context.getPhone() : null;
+        return context != null ? context.getPhoneNumber() : null;
     }
 
-
-    /**
-     * 获取用户类型
-     */
-    public static Integer userType() {
-        UserContext context = get();
-        return context != null ? context.getUserType() : null;
-    }
 
     /**
      * 获取 TraceId

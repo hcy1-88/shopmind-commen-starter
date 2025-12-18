@@ -109,9 +109,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         // 提取用户信息并注入到 UserContext
         Long userId = JwtUtils.getClaimAsLong(claims, JwtConstants.JWT_USER_ID);
-        String username = JwtUtils.getClaimAsString(claims, JwtConstants.JWT_USERNAME);
-        String phone = JwtUtils.getClaimAsString(claims, JwtConstants.JWT_PHONE);
-        Integer userType = JwtUtils.getClaimAsInteger(claims, JwtConstants.JWT_USER_TYPE);
+        String nickname = JwtUtils.getClaimAsString(claims, JwtConstants.JWT_NICKNAME);
+        String phone = JwtUtils.getClaimAsString(claims, JwtConstants.JWT_PHONE_NUMBER);
 
         // 获取或创建 UserContext（可能已经由 TraceIdInterceptor 创建）
         UserContext context = UserContext.get();
@@ -120,14 +119,13 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         context.setUserId(userId);
-        context.setUsername(username);
-        context.setPhone(phone);
-        context.setUserType(userType);
+        context.setNickname(nickname);
+        context.setPhoneNumber(phone);
 
         UserContext.set(context);
 
         if (authProperties.isLogEnabled()) {
-            log.debug("用户认证成功: userId={}, username={}, uri={}", userId, username, requestUri);
+            log.debug("用户认证成功: userId={}, nickname={}, uri={}", userId, nickname, requestUri);
         }
 
         return true;

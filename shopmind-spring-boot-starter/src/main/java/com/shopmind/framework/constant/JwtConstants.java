@@ -28,22 +28,13 @@ public interface JwtConstants {
     /**
      * JWT 中的用户名
      */
-    String JWT_USERNAME = "username";
+    String JWT_NICKNAME = "nickname";
 
     /**
      * JWT 中的手机号
      */
-    String JWT_PHONE = "phone";
+    String JWT_PHONE_NUMBER = "phoneNumber";
 
-    /**
-     * JWT 中的邮箱
-     */
-    String JWT_EMAIL = "email";
-
-    /**
-     * JWT 中的用户类型
-     */
-    String JWT_USER_TYPE = "userType";
 
     /**
      * 加解密算法
