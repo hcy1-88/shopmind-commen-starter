@@ -46,25 +46,20 @@ public class JwtUtils {
      * 解析 Token（使用公钥）
      */
     public static Claims parseToken(String token, PublicKey publicKey) {
-        try {
-            if (StrUtil.isBlank(token) || publicKey == null) {
-                return null;
-            }
-
-            // 移除 Bearer 前缀
-            if (token.startsWith(JwtConstants.TOKEN_PREFIX)) {
-                token = token.substring(JwtConstants.TOKEN_PREFIX.length());
-            }
-
-            return Jwts.parser()
-                    .verifyWith(publicKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
-        } catch (Exception e) {
-            log.error("解析 Token 失败: {}", e.getMessage());
+        if (StrUtil.isBlank(token) || publicKey == null) {
             return null;
         }
+
+        // 移除 Bearer 前缀
+        if (token.startsWith(JwtConstants.TOKEN_PREFIX)) {
+            token = token.substring(JwtConstants.TOKEN_PREFIX.length());
+        }
+
+        return Jwts.parser()
+                .verifyWith(publicKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     /**
