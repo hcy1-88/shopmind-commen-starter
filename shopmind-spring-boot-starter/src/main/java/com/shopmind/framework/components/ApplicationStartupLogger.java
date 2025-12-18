@@ -1,10 +1,11 @@
 // 路径：com.shopmind.starter.logging.ApplicationStartupLogger.java
-package com.shopmind.framework.listeners;
+package com.shopmind.framework.components;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
@@ -15,6 +16,7 @@ import java.net.UnknownHostException;
  * 自动注册，所有引入 shopmind-starter 的服务都会生效
  */
 @Slf4j
+@Component
 public class ApplicationStartupLogger implements ApplicationListener<ApplicationReadyEvent> {
 
     @Override

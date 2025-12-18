@@ -4,7 +4,7 @@ com.shopmind.framework.autoconfig.SeataAutoConfiguration
 com.shopmind.framework.autoconfig.RocketMQAutoConfiguration
 com.shopmind.framework.autoconfig.ServletExceptionHandlerAutoConfiguration
 com.shopmind.framework.autoconfig.GatewayExceptionHandlerAutoConfiguration
-com.shopmind.framework.listeners.ApplicationStartupLogger
 com.shopmind.framework.autoconfig.IdGeneratorAutoConfiguration
 com.shopmind.framework.autoconfig.StorageAutoConfiguration
 com.shopmind.framework.autoconfig.HttpExchangeAutoConfig
+com.shopmind.framework.autoconfig.CommonComponentsAutoConfig
