@@ -1,7 +1,7 @@
 package com.shopmind.framework.util;
 
 import cn.hutool.core.util.IdUtil;
-import com.shopmind.framework.constant.CommonConstants;
+import com.shopmind.framework.constant.JwtConstants;
 import org.slf4j.MDC;
 
 /**
@@ -23,7 +23,7 @@ public class TraceIdUtils {
      * @return TraceId
      */
     public static String getCurrentTraceId() {
-        String traceId = MDC.get(CommonConstants.TRACE_ID_HEADER);
+        String traceId = MDC.get(JwtConstants.TRACE_ID_HEADER);
         return traceId != null ? traceId : "unknown";
     }
 }

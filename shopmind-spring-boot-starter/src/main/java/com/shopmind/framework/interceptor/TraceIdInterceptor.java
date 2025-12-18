@@ -1,7 +1,7 @@
 package com.shopmind.framework.interceptor;
 
 import cn.hutool.core.util.StrUtil;
-import com.shopmind.framework.constant.CommonConstants;
+import com.shopmind.framework.constant.JwtConstants;
 import com.shopmind.framework.context.UserContext;
 import com.shopmind.framework.util.TraceIdUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,16 +20,16 @@ public class TraceIdInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         // 从请求头获取 TraceId，如果没有则生成一个新的
-        String traceId = request.getHeader(CommonConstants.TRACE_ID_HEADER);
+        String traceId = request.getHeader(JwtConstants.TRACE_ID_HEADER);
         if (StrUtil.isBlank(traceId)) {
             traceId = TraceIdUtils.generateTraceId();
         }
 
         // 将 TraceId 放入 MDC（用于日志打印）
-        MDC.put(CommonConstants.TRACE_ID_HEADER, traceId);
+        MDC.put(JwtConstants.TRACE_ID_HEADER, traceId);
 
         // 将 TraceId 放入响应头（方便前端追踪）
-        response.setHeader(CommonConstants.TRACE_ID_HEADER, traceId);
+        response.setHeader(JwtConstants.TRACE_ID_HEADER, traceId);
 
         // 将 TraceId 放入 UserContext
         UserContext context = UserContext.get();
@@ -46,7 +46,7 @@ public class TraceIdInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         // 清理 MDC 和 UserContext
-        MDC.remove(CommonConstants.TRACE_ID_HEADER);
+        MDC.remove(JwtConstants.TRACE_ID_HEADER);
         UserContext.clear();
     }
 }

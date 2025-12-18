@@ -3,7 +3,7 @@ package com.shopmind.framework.constant;
 /**
  * 通用常量
  */
-public interface CommonConstants {
+public interface JwtConstants {
 
     /**
      * Token 请求头名称

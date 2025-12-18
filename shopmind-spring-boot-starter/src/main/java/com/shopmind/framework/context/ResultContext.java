@@ -1,10 +1,7 @@
 package com.shopmind.framework.context;
 
-import com.shopmind.framework.constant.CommonConstants;
 import com.shopmind.framework.util.TraceIdUtils;
 import lombok.Data;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.Serializable;
 import java.util.HashMap;

@@ -1,7 +1,7 @@
 package com.shopmind.framework.util;
 
 import cn.hutool.core.util.StrUtil;
-import com.shopmind.framework.constant.CommonConstants;
+import com.shopmind.framework.constant.JwtConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
@@ -52,8 +52,8 @@ public class JwtUtils {
             }
 
             // 移除 Bearer 前缀
-            if (token.startsWith(CommonConstants.TOKEN_PREFIX)) {
-                token = token.substring(CommonConstants.TOKEN_PREFIX.length());
+            if (token.startsWith(JwtConstants.TOKEN_PREFIX)) {
+                token = token.substring(JwtConstants.TOKEN_PREFIX.length());
             }
 
             return Jwts.parser()

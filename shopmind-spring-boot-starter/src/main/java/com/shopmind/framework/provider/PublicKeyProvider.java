@@ -2,7 +2,7 @@ package com.shopmind.framework.provider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shopmind.framework.constant.CommonConstants;
+import com.shopmind.framework.constant.JwtConstants;
 import com.shopmind.framework.util.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +87,7 @@ public class PublicKeyProvider {
 
             // 4. 重建 PublicKey
             RSAPublicKeySpec spec = new RSAPublicKeySpec(modulus, exponent);
-            PublicKey publicKey = KeyFactory.getInstance(CommonConstants.RSA).generatePublic(spec);
+            PublicKey publicKey = KeyFactory.getInstance(JwtConstants.RSA).generatePublic(spec);
             this.publicKey = publicKey;
             log.info("------------------ 公钥加载完成！");
             return publicKey;

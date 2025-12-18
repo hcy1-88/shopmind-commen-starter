@@ -3,7 +3,7 @@ package com.shopmind.framework.interceptor;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.shopmind.framework.annotation.RequireAuth;
-import com.shopmind.framework.constant.CommonConstants;
+import com.shopmind.framework.constant.JwtConstants;
 import com.shopmind.framework.context.UserContext;
 import com.shopmind.framework.properties.AuthProperties;
 import com.shopmind.framework.provider.PublicKeyProvider;
@@ -78,7 +78,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         // 获取 Token
-        String token = request.getHeader(CommonConstants.AUTHORIZATION_HEADER);
+        String token = request.getHeader(JwtConstants.AUTHORIZATION_HEADER);
         if (StrUtil.isBlank(token)) {
             log.warn("请求未携带 Token: {}", requestUri);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -108,10 +108,10 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         // 提取用户信息并注入到 UserContext
-        Long userId = JwtUtils.getClaimAsLong(claims, CommonConstants.JWT_USER_ID);
-        String username = JwtUtils.getClaimAsString(claims, CommonConstants.JWT_USERNAME);
-        String phone = JwtUtils.getClaimAsString(claims, CommonConstants.JWT_PHONE);
-        Integer userType = JwtUtils.getClaimAsInteger(claims, CommonConstants.JWT_USER_TYPE);
+        Long userId = JwtUtils.getClaimAsLong(claims, JwtConstants.JWT_USER_ID);
+        String username = JwtUtils.getClaimAsString(claims, JwtConstants.JWT_USERNAME);
+        String phone = JwtUtils.getClaimAsString(claims, JwtConstants.JWT_PHONE);
+        Integer userType = JwtUtils.getClaimAsInteger(claims, JwtConstants.JWT_USER_TYPE);
 
         // 获取或创建 UserContext（可能已经由 TraceIdInterceptor 创建）
         UserContext context = UserContext.get();
