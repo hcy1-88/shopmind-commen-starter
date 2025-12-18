@@ -3,6 +3,7 @@ package com.shopmind.framework.provider;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shopmind.framework.constant.CommonConstants;
+import com.shopmind.framework.util.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
@@ -29,7 +30,7 @@ public class PublicKeyProvider {
     /**
      * REST 客户端
      */
-    private final RestTemplate restTemplate;
+    private RestTemplate restTemplate = null;
 
 
     /**
@@ -40,6 +41,14 @@ public class PublicKeyProvider {
 
     public PublicKeyProvider(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+    }
+
+    public PublicKeyProvider(String publicKeyBase64) {
+        try {
+            this.publicKey = JwtUtils.loadPublicKeyFromBase64(publicKeyBase64);
+        } catch (Exception e) {
+            throw new IllegalStateException("无法解析 JWT 公钥，请检查配置格式是否为 Base64 编码的 PEM 公钥", e);
+        }
     }
 
 
