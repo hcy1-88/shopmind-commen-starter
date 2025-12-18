@@ -31,7 +31,6 @@ public class HttpExchangeAutoConfig {
      * 同时添加了 HttpExchangeTokenInterceptor 拦截器，用于传递 Token 和 TraceId
      */
     @Bean
-    @ConditionalOnMissingBean
     @LoadBalanced
     public RestClient.Builder restClientBuilder(HttpExchangeTokenInterceptor interceptor) {
         return RestClient.builder()
