@@ -1,6 +1,7 @@
 package com.shopmind.framework.interceptor;
 
 import cn.hutool.core.util.StrUtil;
+import com.shopmind.framework.constant.ShopmindHeaderConstant;
 import com.shopmind.framework.constant.JwtConstants;
 import com.shopmind.framework.context.UserContext;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +26,12 @@ import java.io.IOException;
 @Slf4j
 public class HttpExchangeTokenInterceptor implements ClientHttpRequestInterceptor {
 
+    private final String serviceName;
+
+    public HttpExchangeTokenInterceptor(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
     @NotNull
     @Override
     public ClientHttpResponse intercept(@NotNull HttpRequest request, @NotNull byte[] body,
@@ -39,11 +46,17 @@ public class HttpExchangeTokenInterceptor implements ClientHttpRequestIntercepto
         // 2. 传递 TraceId
         String traceId = UserContext.traceId();
         if (StrUtil.isNotBlank(traceId)) {
-            request.getHeaders().set(JwtConstants.TRACE_ID_HEADER, traceId);
+            request.getHeaders().set(ShopmindHeaderConstant.TRACE_ID_HEADER, traceId);
             log.debug("HTTP Exchange 请求携带 TraceId: {}, url: {}", traceId, request.getURI());
         }
 
-        // 3. 执行请求
+        // 3，传递服务名
+        if (StrUtil.isNotBlank(this.serviceName)) {
+            request.getHeaders().set(ShopmindHeaderConstant.Calling_SERVICE_HEADER, this.serviceName);
+            log.debug("HTTP Exchange 请求携带当前服务名 {}", this.serviceName);
+        }
+
+        // 4. 执行请求
         return execution.execute(request, body);
     }
 

@@ -1,6 +1,7 @@
 package com.shopmind.framework.autoconfig;
 
 import com.shopmind.framework.interceptor.HttpExchangeTokenInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -17,13 +18,16 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 @Configuration
 public class HttpExchangeAutoConfig {
 
+    @Value("${spring.application.name}")
+    private String serviceName;
+
     /**
      * 注册 HTTP Exchange 拦截器
      * 用于传递 Token 和 TraceId 到下游服务
      */
     @Bean
     public HttpExchangeTokenInterceptor httpExchangeTokenInterceptor() {
-        return new HttpExchangeTokenInterceptor();
+        return new HttpExchangeTokenInterceptor(serviceName);
     }
 
     /**

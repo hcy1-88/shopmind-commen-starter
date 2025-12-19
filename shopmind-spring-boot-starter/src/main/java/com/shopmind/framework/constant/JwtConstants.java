@@ -11,11 +11,6 @@ public interface JwtConstants {
     String AUTHORIZATION_HEADER = "Authorization";
 
     /**
-     * TraceId 请求头名称
-     */
-    String TRACE_ID_HEADER = "X-Trace-ID";
-
-    /**
      * Token 前缀
      */
     String TOKEN_PREFIX = "Bearer ";
