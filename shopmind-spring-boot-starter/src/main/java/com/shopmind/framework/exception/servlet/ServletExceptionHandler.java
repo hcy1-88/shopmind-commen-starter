@@ -6,12 +6,15 @@ import com.shopmind.framework.util.TraceIdUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -52,5 +55,86 @@ public class ServletExceptionHandler {
                 .build();
     }
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public ResultContext<Void> handleNoResourceFoundException(NoResourceFoundException e) {
+        log.warn("资源路径不存在：message={}, traceId:{}", e.getMessage(), TraceIdUtils.getCurrentTraceId());
+        // 正确的正则：注意只有两个反斜杠
+        Pattern pattern = Pattern.compile("No static resource ([^.]+)\\.");
+        Matcher matcher = pattern.matcher(e.getMessage());
+        String path = e.getMessage();
+        if (matcher.find()) {
+            path = matcher.group(1);
+        }
+        return ResultContext.fail(e.getStatusCode() + "", "请求路径不存在：" + path);
+    }
 
+
+    /**
+     * 处理参数校验异常
+     * Spring Validation 注解校验失败时抛出
+     *
+     * @param e MethodArgumentNotValidException
+     * @return ResultContext
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResultContext<Void> handleValidationException(MethodArgumentNotValidException e) {
+        String errorMessage = e.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining("; "));
+
+        log.warn("参数校验异常: message={}, traceId={}",
+                errorMessage,
+                TraceIdUtils.getCurrentTraceId(),
+                e);
+
+        return ResultContext.<Void>failBuilder()
+                .code("PARAM_INVALID")
+                .message("参数校验失败: " + errorMessage)
+                .build();
+    }
+
+    /**
+     * 处理非法参数异常
+     *
+     * @param e IllegalArgumentException
+     * @return ResultContext
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResultContext<Void> handleIllegalArgumentException(IllegalArgumentException e) {
+        log.warn("非法参数异常: message={}, traceId={}",
+                e.getMessage(),
+                TraceIdUtils.getCurrentTraceId(),
+                e);
+
+        return ResultContext.<Void>failBuilder()
+                .code("PARAM_INVALID")
+                .message(e.getMessage() != null ? e.getMessage() : "参数非法")
+                .build();
+    }
+
+
+    /**
+     * 处理系统异常
+     * 未被其他 Handler 捕获的所有异常
+     *
+     * @param e Exception
+     * @return ResultContext
+     */
+    @ExceptionHandler(Exception.class)
+    public ResultContext<Void> handleException(Exception e) {
+        // 系统异常通常是非预期的，使用 error 级别
+        log.error("系统异常: exceptionType={}, message={}, traceId={}",
+                e.getClass().getName(),
+                e.getMessage(),
+                TraceIdUtils.getCurrentTraceId(),
+                e);
+
+        return ResultContext.<Void>failBuilder()
+                .code(ResultContext.SYSTEM_ERROR_CODE)
+                .message("系统内部错误，请稍后重试")
+                .build();
+    }
 }

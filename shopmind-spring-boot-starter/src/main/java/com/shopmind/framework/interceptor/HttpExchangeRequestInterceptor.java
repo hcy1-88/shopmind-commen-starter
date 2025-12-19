@@ -24,11 +24,11 @@ import java.io.IOException;
  * </p>
  */
 @Slf4j
-public class HttpExchangeTokenInterceptor implements ClientHttpRequestInterceptor {
+public class HttpExchangeRequestInterceptor implements ClientHttpRequestInterceptor {
 
     private final String serviceName;
 
-    public HttpExchangeTokenInterceptor(String serviceName) {
+    public HttpExchangeRequestInterceptor(String serviceName) {
         this.serviceName = serviceName;
     }
 

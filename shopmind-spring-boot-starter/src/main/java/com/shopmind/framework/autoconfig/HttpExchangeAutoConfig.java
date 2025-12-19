@@ -1,14 +1,13 @@
 package com.shopmind.framework.autoconfig;
 
-import com.shopmind.framework.interceptor.HttpExchangeTokenInterceptor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shopmind.framework.interceptor.HttpExchangeRequestInterceptor;
+import com.shopmind.framework.interceptor.HttpExchangeResponseInterceptor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.support.RestClientAdapter;
-import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 /**
  * Description: http exchange 自动配置类
@@ -22,22 +21,34 @@ public class HttpExchangeAutoConfig {
     private String serviceName;
 
     /**
-     * 注册 HTTP Exchange 拦截器
+     * 注册 HTTP Exchange 请求拦截器
      * 用于传递 Token 和 TraceId 到下游服务
      */
     @Bean
-    public HttpExchangeTokenInterceptor httpExchangeTokenInterceptor() {
-        return new HttpExchangeTokenInterceptor(serviceName);
+    public HttpExchangeRequestInterceptor httpExchangeRequestInterceptor() {
+        return new HttpExchangeRequestInterceptor(serviceName);
+    }
+
+    /**
+     * 注册 HTTP Exchange 响应拦截器
+     * 用于拦截下游服务的 InternalApiException 并重新抛出
+     */
+    @Bean
+    public HttpExchangeResponseInterceptor httpExchangeResponseInterceptor(ObjectMapper objectMapper) {
+        return new HttpExchangeResponseInterceptor(objectMapper);
     }
 
     /**
      * 通过 @LoadBalanced 注解，RestClient 将能够识别服务名（如 user-service），并通过 Nacos 进行服务发现和负载均衡
-     * 同时添加了 HttpExchangeTokenInterceptor 拦截器，用于传递 Token 和 TraceId
+     * 同时添加了请求拦截器和响应拦截器
      */
     @Bean
     @LoadBalanced
-    public RestClient.Builder restClientBuilder(HttpExchangeTokenInterceptor interceptor) {
+    public RestClient.Builder restClientBuilder(
+            HttpExchangeRequestInterceptor requestInterceptor,
+            HttpExchangeResponseInterceptor responseInterceptor) {
         return RestClient.builder()
-                .requestInterceptor(interceptor);
+                .requestInterceptor(requestInterceptor)
+                .requestInterceptor(responseInterceptor);
     }
 }
