@@ -1,5 +1,6 @@
 package com.shopmind.framework.exception;
 
+import java.io.Serial;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Map;
  */
 public class ShopmindException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -138,7 +140,7 @@ public class ShopmindException extends RuntimeException {
 
         String result = template;
         for (Object arg : args) {
-            result = result.replaceFirst("\\{\\}", arg != null ? arg.toString() : "null");
+            result = result.replaceFirst("\\{}", arg != null ? arg.toString() : "null");
         }
         return result;
     }
