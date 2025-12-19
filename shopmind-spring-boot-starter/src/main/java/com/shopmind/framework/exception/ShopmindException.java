@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Shopmind 业务异常基类
+ * Shopmind 业务异常基类（可被全局处理器捕获 并返回 ResultContext 结果）
  * 所有业务服务的自定义异常都应该继承此类
  */
 public class ShopmindException extends RuntimeException {
