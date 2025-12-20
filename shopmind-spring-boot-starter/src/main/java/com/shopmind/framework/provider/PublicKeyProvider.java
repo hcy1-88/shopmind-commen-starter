@@ -3,6 +3,7 @@ package com.shopmind.framework.provider;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shopmind.framework.constant.JwtConstants;
+import com.shopmind.framework.constant.ServiceNameConstant;
 import com.shopmind.framework.util.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class PublicKeyProvider {
     /**
      * 认证服务地址（硬编码，通过网关访问）
      */
-    private static final String AUTH_SERVICE_URL = "http://auth-service";
+    private static final String AUTH_SERVICE_URL = "http://" + ServiceNameConstant.AUTH_SERVICE;
 
     /**
      * REST 客户端
