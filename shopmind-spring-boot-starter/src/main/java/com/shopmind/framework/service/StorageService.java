@@ -13,9 +13,22 @@ public interface StorageService {
     /**
      * 上传文件
      * @param file 文件
+     * @param dir 文件夹名
      * @return 上传后，文件的 url
      */
-    String uploadFile(MultipartFile file);
+    String uploadFile(MultipartFile file, String dir);
+
+    /**
+     * 以字节数组上传文件, 文件名随机
+     * @param file 字节数组
+     * @param contentType 文件类型 ，如下（并非全部列举）
+     *      图片：image/jpeg、image/png、image/gif、image/webp
+     *      音频：audio/mpeg、audio/wav、audio/aac
+     *      视频：video/mp4、video/webm
+     * @param dir 文件夹名
+     * @return 资源 url
+     */
+    String uploadFile(byte[] file, String contentType, String dir);
 
     /**
      * 下载文件
@@ -47,7 +60,7 @@ public interface StorageService {
      * @param file 文件
      * @return 文件 url
      */
-    String uploadLargeFile(MultipartFile file);
+    String uploadLargeFile(MultipartFile file, String dir);
 
     // ============= 前端分片，后端配合，分片上传大型文件（现在应用的标准方式） =============
 
@@ -56,7 +69,7 @@ public interface StorageService {
      * @param fileName 文件名
      * @return uploadId
      */
-    String initiateMultipartUpload(String fileName);
+    String initiateMultipartUpload(String fileName, String dir);
 
     /**
      * 上传分片
@@ -67,7 +80,7 @@ public interface StorageService {
      * @param size  分片大小
      * @return 分片完成情况（重要参数：completedPart.partNumber() 和 completedPart.eTag()）
      */
-    CompletedPart uploadPart(String fileName, String uploadId, int partNumber, InputStream inputStream, long size);
+    CompletedPart uploadPart(String fileName, String dir, String uploadId, int partNumber, InputStream inputStream, long size);
 
     /**
      * 合并文件分片
@@ -75,12 +88,12 @@ public interface StorageService {
      * @param uploadId 初始化分片上传请求时，返回的 uploadId
      * @param parts 每一个分片对象
      */
-    String completeMultipartUpload(String fileName, String uploadId, List<FilePart> parts);
+    String completeMultipartUpload(String fileName, String dir, String uploadId, List<FilePart> parts);
 
     /**
      * 取消分片上传
      * @param fileName 文件名
      * @param uploadId  分片初始化时返回的 uploadId
      */
-    void cancelMultipartUpload(String fileName, String uploadId);
+    void cancelMultipartUpload(String fileName, String dir, String uploadId);
 }

@@ -1,5 +1,6 @@
 package com.shopmind.framework.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.shopmind.framework.exception.ShopmindException;
 import com.shopmind.framework.id.IdGenerator;
 import com.shopmind.framework.model.FileObject;
@@ -40,7 +41,7 @@ public class RustFSStorageImpl implements StorageService {
     }
 
     @Override
-    public String uploadFile(MultipartFile file) {
+    public String uploadFile(MultipartFile file,  String dir) {
         try {
             // 检查存储桶是否存在，不存在则创建
             if (!bucketExists(rustFSProperties.getBucketName())) {
@@ -48,6 +49,10 @@ public class RustFSStorageImpl implements StorageService {
             }
 
             String fileName = generateFileName(file.getOriginalFilename());
+
+            if (StrUtil.isNotEmpty(dir)){
+                fileName = dir + "/" + fileName;
+            }
 
             s3Client.putObject(
                     PutObjectRequest.builder()
@@ -66,6 +71,23 @@ public class RustFSStorageImpl implements StorageService {
             log.error("文件上传失败", e);
             throw new ShopmindException("文件上传失败: " + e.getMessage());
         }
+    }
+
+    @Override
+    public String uploadFile(byte[] file, String contentType, String dir) {
+        String fileName = generateFileNameByContentType(contentType);
+        if (StrUtil.isNotEmpty(dir)){
+            fileName = dir + "/" + fileName;
+        }
+        s3Client.putObject(
+                PutObjectRequest.builder()
+                        .bucket(rustFSProperties.getBucketName())
+                        .key(fileName)
+                        .contentType(contentType)
+                        .build(),
+                RequestBody.fromBytes(file)
+        );
+        return buildFileUrl(fileName);
     }
 
     @Override
@@ -119,16 +141,21 @@ public class RustFSStorageImpl implements StorageService {
     }
 
     @Override
-    public String uploadLargeFile(MultipartFile file) {
+    public String uploadLargeFile(MultipartFile file, String dir) {
         try {
             String fileName = file.getOriginalFilename();
+            
+            if (StrUtil.isNotEmpty(dir)){
+                fileName = dir + "/" + fileName;
+            }
+            
             byte[] fileBytes = file.getBytes();
 
             // 设置每个分片的大小（MB）
             int chunkSize = rustFSProperties.getChunkSize() * 1024 * 1024;
 
             // 1. 初始化分片上传
-            String uploadId = this.initiateMultipartUpload(fileName);
+            String uploadId = this.initMultipartUpload(fileName);
 
             // 2. 上传所有分片
             List<CompletedPart> completedParts = new ArrayList<>();
@@ -140,7 +167,7 @@ public class RustFSStorageImpl implements StorageService {
                 byte[] chunk = new byte[currentChunkSize];
                 System.arraycopy(fileBytes, offset, chunk, 0, currentChunkSize);
 
-                CompletedPart completedPart = this.uploadPart(
+                CompletedPart completedPart = this.getCompletedPart(
                         fileName,
                         uploadId,
                         partNumber,
@@ -172,7 +199,14 @@ public class RustFSStorageImpl implements StorageService {
     }
 
     @Override
-    public String initiateMultipartUpload(String fileName) {
+    public String initiateMultipartUpload(String fileName, String dir) {
+        if (StrUtil.isNotEmpty(dir)){
+            fileName = dir + "/" + fileName;
+        }
+        return initMultipartUpload(fileName);
+    }
+
+    private String initMultipartUpload(String fileName) {
         return s3Client.createMultipartUpload(
                 CreateMultipartUploadRequest.builder()
                         .bucket(rustFSProperties.getBucketName())
@@ -182,7 +216,14 @@ public class RustFSStorageImpl implements StorageService {
     }
 
     @Override
-    public CompletedPart uploadPart(String fileName, String uploadId, int partNumber, InputStream inputStream, long size) {
+    public CompletedPart uploadPart(String fileName, String dir, String uploadId, int partNumber, InputStream inputStream, long size) {
+        if (StrUtil.isNotEmpty(dir)){
+            fileName = dir + "/" + fileName;
+        }
+        return getCompletedPart(fileName, uploadId, partNumber, inputStream, size);
+    }
+
+    private CompletedPart getCompletedPart(String fileName, String uploadId, int partNumber, InputStream inputStream, long size) {
         UploadPartResponse response = s3Client.uploadPart(
                 UploadPartRequest.builder()
                         .bucket(rustFSProperties.getBucketName())
@@ -200,7 +241,10 @@ public class RustFSStorageImpl implements StorageService {
     }
 
     @Override
-    public String completeMultipartUpload(String fileName, String uploadId, List<FilePart> parts) {
+    public String completeMultipartUpload(String fileName, String dir, String uploadId, List<FilePart> parts) {
+        if (StrUtil.isNotEmpty(dir)){
+            fileName = dir + "/" + fileName;
+        }
         List<CompletedPart> completedParts = parts.stream().map(part ->
                 CompletedPart
                         .builder()
@@ -222,7 +266,10 @@ public class RustFSStorageImpl implements StorageService {
     }
 
     @Override
-    public void cancelMultipartUpload(String fileName, String uploadId) {
+    public void cancelMultipartUpload(String fileName, String dir, String uploadId) {
+        if (StrUtil.isNotEmpty(dir)){
+            fileName = dir + "/" + fileName;
+        }
         s3Client.abortMultipartUpload(
                 AbortMultipartUploadRequest.builder()
                         .bucket(rustFSProperties.getBucketName())
@@ -325,6 +372,14 @@ public class RustFSStorageImpl implements StorageService {
 
         String uniqueId = idGenerator.nextIdStr();
         return baseName + "_" + uniqueId + extension;
+    }
+
+    private String generateFileNameByContentType(String contentType) {
+        if (contentType == null || contentType.trim().isEmpty() || !contentType.contains("/")) {
+            throw new IllegalArgumentException("contentType 非法！");
+        }
+        String[] split = contentType.split("/");
+        return idGenerator.nextIdStr() + "." + split[1];
     }
 
 

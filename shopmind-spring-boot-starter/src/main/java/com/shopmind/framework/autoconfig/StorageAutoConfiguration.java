@@ -30,6 +30,7 @@ import java.net.URI;
 @Validated
 @Configuration
 @EnableConfigurationProperties(StorageProperties.class)
+@ConditionalOnClass(S3Client.class)
 @ConditionalOnProperty(prefix = "shopmind.storage", name = "enabled", havingValue = "true")
 public class StorageAutoConfiguration {
 
