@@ -1,5 +1,6 @@
 package com.shopmind.framework.properties;
 
+import com.shopmind.framework.constant.ServiceNameConstant;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -45,5 +46,5 @@ public class AuthProperties {
     /**
      * 获取公钥的 url
      */
-    private String publicKeyUrl = "http://auth-service/.well-known/jwks.json";
+    private String publicKeyUrl = "http://" + ServiceNameConstant.AUTH_SERVICE + "/.well-known/jwks.json";
 }
