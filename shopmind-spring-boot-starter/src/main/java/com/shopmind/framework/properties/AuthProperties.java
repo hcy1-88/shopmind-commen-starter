@@ -41,4 +41,9 @@ public class AuthProperties {
      * 是否打印认证日志
      */
     private boolean logEnabled = true;
+
+    /**
+     * 获取公钥的 url
+     */
+    private String publicKeyUrl = "http://auth-service/.well-known/jwks.json";
 }

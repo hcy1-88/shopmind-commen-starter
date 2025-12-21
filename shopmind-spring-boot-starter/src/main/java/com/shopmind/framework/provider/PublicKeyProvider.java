@@ -24,9 +24,9 @@ public class PublicKeyProvider {
     private static final Logger log = LoggerFactory.getLogger(PublicKeyProvider.class);
 
     /**
-     * 认证服务地址（硬编码，通过网关访问）
+     * 获取公钥的地址
      */
-    private static final String AUTH_SERVICE_URL = "http://" + ServiceNameConstant.AUTH_SERVICE;
+    private String publicKeyUrl;
 
     /**
      * REST 客户端
@@ -40,8 +40,9 @@ public class PublicKeyProvider {
     private PublicKey publicKey;
 
 
-    public PublicKeyProvider(RestTemplate restTemplate) {
+    public PublicKeyProvider(RestTemplate restTemplate, String publicKeyUrl) {
         this.restTemplate = restTemplate;
+        this.publicKeyUrl = publicKeyUrl;
     }
 
     public PublicKeyProvider(String publicKeyBase64) {
@@ -63,7 +64,7 @@ public class PublicKeyProvider {
                 return this.publicKey;
             }
             // 1. 从 auth-service 获取 jwk json
-            String jwksUrl = AUTH_SERVICE_URL + "/.well-known/jwks.json";
+            String jwksUrl = this.publicKeyUrl;
             log.info("正在从认证服务获取公钥: {}", jwksUrl);
             String jwksJson = restTemplate.getForObject(jwksUrl, String.class);
             if (jwksJson == null) {

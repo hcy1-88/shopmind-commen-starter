@@ -48,7 +48,7 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
     @Bean
     @ConditionalOnProperty(name = "shopmind.auth.enabled", havingValue = "true")
     public PublicKeyProvider publicKeyProvider(RestTemplate restTemplate) {
-        return new PublicKeyProvider(restTemplate);
+        return new PublicKeyProvider(restTemplate, authProperties.getPublicKeyUrl());
     }
 
     @Bean
