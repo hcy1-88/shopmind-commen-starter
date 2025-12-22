@@ -46,6 +46,7 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
      * 提供 PublicKeyProvider Bean
      */
     @Bean
+    @ConditionalOnMissingBean
     public PublicKeyProvider publicKeyProvider(RestTemplate restTemplate) {
         return new PublicKeyProvider(restTemplate, authProperties.getPublicKeyUrl());
     }
