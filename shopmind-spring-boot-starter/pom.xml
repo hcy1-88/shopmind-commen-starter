@@ -106,6 +106,12 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Hutool 工具类 -->
         <dependency>
             <groupId>cn.hutool</groupId>
