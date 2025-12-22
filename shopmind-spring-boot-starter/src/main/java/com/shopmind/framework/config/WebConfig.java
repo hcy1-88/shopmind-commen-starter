@@ -46,13 +46,11 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
      * 提供 PublicKeyProvider Bean
      */
     @Bean
-    @ConditionalOnProperty(name = "shopmind.auth.enabled", havingValue = "true")
     public PublicKeyProvider publicKeyProvider(RestTemplate restTemplate) {
         return new PublicKeyProvider(restTemplate, authProperties.getPublicKeyUrl());
     }
 
     @Bean
-    @ConditionalOnProperty(name = "shopmind.auth.enabled", havingValue = "true")
     public AuthInterceptor authInterceptor(
             AuthProperties authProperties,
             PublicKeyProvider publicKeyProvider) {
@@ -67,11 +65,9 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
                 .order(1);
 
         // 认证拦截器（仅在启用认证时注册）
-        if (authProperties.isEnabled()) {
-            registry.addInterceptor(applicationContext.getBean(AuthInterceptor.class))
-                    .addPathPatterns("/**")
-                    .order(2);
-        }
+        registry.addInterceptor(applicationContext.getBean(AuthInterceptor.class))
+                .addPathPatterns("/**")
+                .order(2);
     }
 
     @Override

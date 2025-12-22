@@ -20,11 +20,6 @@ import java.util.List;
 public class AuthProperties {
 
     /**
-     * 是否启用认证拦截器
-     */
-    private boolean enabled = false;
-
-    /**
      * 系统白名单路径（用于系统级接口，一般无需修改）
      * 包含：健康检查、监控端点、API 文档、静态资源等
      */

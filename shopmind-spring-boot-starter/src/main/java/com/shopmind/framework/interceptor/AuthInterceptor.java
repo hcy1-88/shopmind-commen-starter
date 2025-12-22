@@ -41,6 +41,48 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String requestUri = request.getRequestURI();
+        String token = request.getHeader(JwtConstants.AUTHORIZATION_HEADER);
+        if (StrUtil.isNotBlank(token)) {
+            // 有 token，必须解析 Token（使用公钥）
+            PublicKey publicKey = publicKeyProvider.getPublicKey();
+            if (publicKey == null) {
+                log.error("无法获取公钥，请检查认证服务是否正常");
+            }
+
+            Claims claims = JwtUtils.parseToken(token, publicKey);
+            if (claims == null) {
+                log.warn("Token 解析失败: {}", requestUri);
+                throw new IllegalStateException("非法的 token！");
+            }
+
+            // 检查 Token 是否过期
+            if (JwtUtils.isTokenExpired(claims)) {
+                log.warn("Token 已过期: {}", requestUri);
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return false;
+            }
+
+            // 提取用户信息并注入到 UserContext
+            Long userId = JwtUtils.getClaimAsLong(claims, JwtConstants.JWT_USER_ID);
+            String nickname = JwtUtils.getClaimAsString(claims, JwtConstants.JWT_NICKNAME);
+            String phone = JwtUtils.getClaimAsString(claims, JwtConstants.JWT_PHONE_NUMBER);
+
+            // 获取或创建 UserContext（可能已经由 TraceIdInterceptor 创建）
+            UserContext context = UserContext.get();
+            if (context == null) {
+                context = UserContext.builder().build();
+            }
+
+            context.setUserId(userId);
+            context.setNickname(nickname);
+            context.setPhoneNumber(phone);
+
+            UserContext.set(context);
+
+            if (authProperties.isLogEnabled()) {
+                log.debug("用户认证成功: userId={}, nickname={}, uri={}", userId, nickname, requestUri);
+            }
+        }
 
         // 1. 检查系统白名单（如 /actuator/**、/swagger-ui/** 等）
         if (isInSystemWhitelist(requestUri)) {
@@ -64,68 +106,11 @@ public class AuthInterceptor implements HandlerInterceptor {
         boolean requireAuth = method.isAnnotationPresent(RequireAuth.class)
                 || clazz.isAnnotationPresent(RequireAuth.class);
 
-        // 4. 如果不需要认证，直接放行
-        if (!requireAuth) {
-            if (authProperties.isLogEnabled()) {
-                log.debug("公开接口，无需认证: {}", requestUri);
-            }
-            return true;
-        }
-
-        // 5. 需要认证，开始验证 Token
-        if (authProperties.isLogEnabled()) {
-            log.debug("需要认证的接口，开始验证 Token: {}", requestUri);
-        }
-
-        // 获取 Token
-        String token = request.getHeader(JwtConstants.AUTHORIZATION_HEADER);
-        if (StrUtil.isBlank(token)) {
-            log.warn("请求未携带 Token: {}", requestUri);
+        // 4. 如果需要认证，但 token 为空
+        if (requireAuth && UserContext.userId() == null) {
+            log.error("接口必须认证: {}", requestUri);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
-        }
-
-        // 解析 Token（使用公钥）
-        PublicKey publicKey = publicKeyProvider.getPublicKey();
-        if (publicKey == null) {
-            log.error("无法获取公钥，请检查认证服务是否正常");
-            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-            return false;
-        }
-
-        Claims claims = JwtUtils.parseToken(token, publicKey);
-        if (claims == null) {
-            log.warn("Token 解析失败: {}", requestUri);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
-
-        // 检查 Token 是否过期
-        if (JwtUtils.isTokenExpired(claims)) {
-            log.warn("Token 已过期: {}", requestUri);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
-
-        // 提取用户信息并注入到 UserContext
-        Long userId = JwtUtils.getClaimAsLong(claims, JwtConstants.JWT_USER_ID);
-        String nickname = JwtUtils.getClaimAsString(claims, JwtConstants.JWT_NICKNAME);
-        String phone = JwtUtils.getClaimAsString(claims, JwtConstants.JWT_PHONE_NUMBER);
-
-        // 获取或创建 UserContext（可能已经由 TraceIdInterceptor 创建）
-        UserContext context = UserContext.get();
-        if (context == null) {
-            context = UserContext.builder().build();
-        }
-
-        context.setUserId(userId);
-        context.setNickname(nickname);
-        context.setPhoneNumber(phone);
-
-        UserContext.set(context);
-
-        if (authProperties.isLogEnabled()) {
-            log.debug("用户认证成功: userId={}, nickname={}, uri={}", userId, nickname, requestUri);
         }
 
         return true;
