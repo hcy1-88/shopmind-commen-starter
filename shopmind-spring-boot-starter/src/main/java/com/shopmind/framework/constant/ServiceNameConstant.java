@@ -12,4 +12,6 @@ public interface ServiceNameConstant {
     String ORDER_SERVICE = "shopmind-order-service";
     String PRODUCT_SERVICE = "shopmind-product-service";
     String COMMENT_SERVICE = "shopmind-comment-service";
+    String AI_SERVICE = "shopmind-ai-service";
+    String RECOMMENDATION_SERVICE = "shopmind-recommendation-service";
 }
