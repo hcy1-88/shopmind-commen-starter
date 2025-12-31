@@ -59,7 +59,7 @@ public class ApplicationStartupLogger implements ApplicationListener<Application
               .append("║                                                                      \n")
               .append(String.format("║   • 应用名称：%-56s\n", appName))
               .append(String.format("║   • 激活环境：%-56s\n", profile))
-              .append(String.format("║   • 服务端口：%-56s║", port))
+              .append(String.format("║   • 服务端口：%-56s\n", port))
               .append(String.format("║   • 主机地址：%-56s\n", baseUrl))
               .append(String.format("║   • 启动耗时：%-56s\n", String.format("%.2f 秒", seconds)))
               .append("║                                                                      \n")
