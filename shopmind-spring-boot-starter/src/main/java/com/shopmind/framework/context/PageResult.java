@@ -12,7 +12,7 @@ import lombok.Data;
 @Builder
 public class PageResult<T> {
     private T data;
-    private int total;
-    private int pageNumber;
-    private int pageSize;
+    private Long total;
+    private Long pageNumber;
+    private Long pageSize;
 }
