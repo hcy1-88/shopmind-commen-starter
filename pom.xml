@@ -126,4 +126,15 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>shopmind-maven</id>
+            <url>https://packages.aliyun.com/696ccd114a29923eb36066a0/maven/shopmind-maven</url>
+        </repository>
+        <snapshotRepository>
+            <id>shopmind-maven</id>
+            <url>https://packages.aliyun.com/696ccd114a29923eb36066a0/maven/shopmind-maven</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
